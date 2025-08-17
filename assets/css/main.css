@@ -5,28 +5,66 @@
   --heading-font: "Nunito",  sans-serif;
   --nav-font: "Inter",  sans-serif;
 }
+.alert-success {
+  background-color: #d1e7dd;
+  border: 1px solid #badbcc;
+  color: #0f5132;
+}
+.alert-danger {
+  background-color: #f8d7da; /* rouge clair */
+  border: 1px solid #f5c2c7;
+  color: #842029;
+}
 
-/* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
+/* CSS (mettre après bootstrap.css) */
+.alert-blue {
+  background-color: #e7f1ff !important; /* Bleu clair */
+  color: #1f1f20 !important;            /* Texte bleu */
+  border: 1px solid #0d6efd !important;
+}
+
+
+.textarea-container {
+  position: relative;
+}
+
+.copy-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #0d6efd; /* bleu */
+  transition: color 0.2s;
+}
+
+.copy-icon:hover {
+  color: #0b5ed7;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 :root { 
-  --background-color: #ffffff; /* Background color for the entire website, including individual sections */
-  --default-color: #212529; /* Default color used for the majority of the text content across the entire website */
-  --heading-color: #2d465e; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #0d83fd; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
-  --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
-  --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
-}
+  --background-color: #ffffff; 
+  --default-color: #212529;  
+  --heading-color: #2d465e; 
+  --accent-color: #0d83fd; 
+  --surface-color: #ffffff; 
+  --contrast-color: #ffffff; }
 
-/* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
+
 :root {
-  --nav-color: #212529;  /* The default color of the main navmenu links */
-  --nav-hover-color: #0d83fd; /* Applied to main navmenu links when they are hovered over or active */
-  --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
-  --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-  --nav-dropdown-color: #212529; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #0d83fd; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-color: #212529; 
+  --nav-hover-color: #0d83fd; 
+  --nav-mobile-background-color: #ffffff; 
+  --nav-dropdown-background-color: #ffffff;
+  --nav-dropdown-color: #212529; 
+  --nav-dropdown-hover-color: #0d83fd; 
 }
 
-/* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
 
 .light-background {
   --background-color: #f3f9ff;
@@ -305,6 +343,18 @@ h6 {
     white-space: nowrap;
     transition: 0.3s;
   }
+/* Forcer le style personnalisé pour alert-info */
+
+
+
+
+}
+
+
+
+ 
+ 
+
 
   .navmenu a i,
   .navmenu a:focus i {
@@ -676,6 +726,8 @@ section,
 .hero .hero-content h1 .accent-text {
   color: var(--accent-color);
 }
+
+
 
 @media (max-width: 992px) {
   .hero .hero-content {

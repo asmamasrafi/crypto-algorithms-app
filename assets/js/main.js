@@ -1,10 +1,4 @@
-/**
-* Template Name: iLanding
-* Template URL: https://bootstrapmade.com/ilanding-bootstrap-landing-page-template/
-* Updated: Nov 12 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
+
 
 (function() {
   "use strict";
@@ -226,7 +220,7 @@ async function analyzeText(mode) {
   if (!text) return alert("Please enter some text.");
 
   try {
-    const res = await fetch("http://localhost:5000/analyse", {
+    const res = await fetch("http://127.0.0.1:5000/analyse", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text })
@@ -236,8 +230,8 @@ async function analyzeText(mode) {
     methodeRecommandee = data.recommended || "";
 
     // Affichage résultats
-    document.getElementById("scoreValue").textContent = data.score || "N/A";
-    document.getElementById("methodValue").textContent = methodeRecommandee || "N/A";
+    document.getElementById("scoreValue").textContent = data.score || "No sensitive content detected";
+    document.getElementById("methodValue").textContent = methodeRecommandee || "No specific method needed — you can use any method";
     document.getElementById("encryptionDetails").classList.remove("d-none");
 
     // Met à jour automatiquement le champ clé selon l'algo recommandé
@@ -247,6 +241,47 @@ async function analyzeText(mode) {
     alert("Error during analysis: " + err.message);
   }
 }
+
+// Surveille les changements de score pour changer la couleur
+const observer = new MutationObserver(() => {
+  const resultDiv = document.getElementById("analysisResult");
+  const scoreText = document.getElementById("scoreValue").textContent.trim();
+
+  resultDiv.classList.remove("alert-success", "alert-danger");
+
+  // Vérifie le score numérique
+  const score = parseInt(scoreText, 10);
+
+  if (isNaN(score) || score <= 1) {
+    // Score 1 ou pas de contenu sensible → vert
+    resultDiv.classList.add("alert-success");
+  } else if (score >= 2 && score <= 4) {
+    // Score 2,3,4 → rouge
+    resultDiv.classList.add("alert-danger");
+  }
+});
+
+// Observer les changements du score
+const scoreNode = document.getElementById("scoreValue");
+observer.observe(scoreNode, { childList: true });
+
+document.querySelectorAll(".copy-icon").forEach(icon => {
+  icon.addEventListener("click", () => {
+    const targetId = icon.getAttribute("data-target");
+    const textarea = document.getElementById(targetId);
+    if (!textarea) return;
+
+    textarea.select();
+    textarea.setSelectionRange(0, 99999); // pour mobile
+    navigator.clipboard.writeText(textarea.value)
+      .then(() => {
+        // Changement de couleur temporaire pour indiquer la copie
+        icon.style.color = '#198754'; // vert
+        setTimeout(() => icon.style.color = '#0d6efd', 800);
+      })
+      .catch(err => console.error("Erreur copie : ", err));
+  });
+});
 
 /**
  * Chiffrement
@@ -271,7 +306,7 @@ document.querySelector(".encrypt-btn").onclick = async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/encrypt", {
+    const res = await fetch("http://127.0.0.1:5000/encrypt", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -306,7 +341,7 @@ document.querySelector(".decrypt-btn").onclick = async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:5000/decrypt", {
+    const res = await fetch("http://127.0.0.1:5000/decrypt", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
