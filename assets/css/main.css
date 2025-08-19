@@ -18,7 +18,7 @@
 
 /* CSS (mettre après bootstrap.css) */
 .alert-blue {
-  background-color: #e7f1ff !important; /* Bleu clair */
+  background-color: #ecf4ff !important; /* Bleu clair */
   color: #1f1f20 !important;            /* Texte bleu */
   border: 1px solid #0d6efd !important;
 }
@@ -436,7 +436,7 @@ h6 {
   .mobile-nav-active .navmenu>ul {
     display: block;
   }
-}
+
 
 /*--------------------------------------------------------------
 # Global Footer

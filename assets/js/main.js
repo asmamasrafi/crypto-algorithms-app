@@ -255,7 +255,7 @@ const observer = new MutationObserver(() => {
   if (isNaN(score) || score <= 1) {
     // Score 1 ou pas de contenu sensible → vert
     resultDiv.classList.add("alert-success");
-  } else if (score >= 2 && score <= 4) {
+  } else if (score >= 2 && score <= 10) {
     // Score 2,3,4 → rouge
     resultDiv.classList.add("alert-danger");
   }
