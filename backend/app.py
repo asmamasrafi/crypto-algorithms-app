@@ -5,8 +5,6 @@ from crypto_utils import aes_encrypt, aes_decrypt, rsa_encrypt, rsa_decrypt
 from rsa_key_utils import generate_rsa_keys
 
 
-
-
 app = Flask(__name__)
 
 # Pour le dev : autoriser ton live-server (127.0.0.1:5500) — et localhost au cas où
@@ -27,20 +25,31 @@ def analyse():
 
 @app.route("/encrypt", methods=["POST"])
 def encrypt():
-    data = request.json or {}
-    text = data.get("text", "")
-    method = data.get("method", "")
     try:
-        if method == "AES":
-            return jsonify({"result": aes_encrypt(text, data["password"])})
-        elif method == "RSA":
-            return jsonify({"result": rsa_encrypt(text, data["public_key"])})
-        else:
-            return jsonify({"error": "Méthode inconnue"}), 400
-    except Exception as e:
-        app.logger.exception("encrypt error")
-        return jsonify({"error": str(e)}), 500
+        data = request.get_json()
+        text = data.get("text", "")
+        method = data.get("method", "")
+        password = data.get("password", None)
+        public_key = data.get("public_key", None)
 
+        if not text:
+            return jsonify({"error": "No text provided"}), 400
+
+        if method == "AES":
+            result = aes_encrypt(text, password)
+            return jsonify(result)
+
+        elif method == "RSA":
+            if not public_key:
+                return jsonify({"error": "RSA public key is required"}), 400
+            result = rsa_encrypt(text, public_key)
+            return jsonify({"result": result})
+
+        else:
+            return jsonify({"error": f"Unsupported method {method}"}), 400
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 @app.route("/decrypt", methods=["POST"])
 def decrypt():
     data = request.json or {}

@@ -296,7 +296,7 @@ document.querySelector(".encrypt-btn").onclick = async () => {
   const algo = document.getElementById("encryptAlgorithm").value;
   let key = document.getElementById("encryptSecretKey").value.trim();
 
-  // Si RSA et pas de clé → essayer la clé publique générée
+  // RSA : clé publique obligatoire
   if ((algo === "RSA" || methodeRecommandee === "RSA") && !key) {
     key = document.getElementById("rsaPublicKeyDisplay").textContent.trim();
   }
@@ -306,20 +306,39 @@ document.querySelector(".encrypt-btn").onclick = async () => {
   }
 
   try {
-    const res = await fetch("http://127.0.0.1:5000/encrypt", {
+    const res = await fetch("http://localhost:5000/encrypt", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         text,
         method: algo === "auto" ? methodeRecommandee : algo,
-        password: (algo === "AES" || methodeRecommandee === "AES") && key ? key : undefined,
+        password: (algo === "AES" || methodeRecommandee === "AES") ? (key || null) : undefined,
         public_key: (algo === "RSA" || methodeRecommandee === "RSA") ? key : undefined
       })
     });
 
     const data = await res.json();
+
+    // afficher résultat chiffré
     document.getElementById("encryptOutputText").value =
       data.result || "Error: " + (data.error || "Unknown error");
+
+    // si backend a généré une clé AES, on l’affiche
+    // si backend a généré une clé AES, on l’affiche via un toast
+if (data.generated_key) {
+  const toastBody = document.getElementById("toastAesKeyBody");
+  toastBody.textContent = "Generated AES key: " + data.generated_key;
+
+  const toastElement = document.getElementById("toastAesKey");
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
+
+  // copier automatiquement dans le presse-papier
+  navigator.clipboard.writeText(data.generated_key)
+    .then(() => console.log("AES key copied to clipboard ✅"))
+    .catch(err => console.error("Clipboard error:", err));
+}
+
 
   } catch (err) {
     alert("Encryption failed: " + err.message);
@@ -394,3 +413,4 @@ document.getElementById("encryptAlgorithm").addEventListener("change", function 
 document.getElementById("decryptAlgorithm").addEventListener("change", function () {
   updateKeyField(this.value, "decrypt");
 });
+

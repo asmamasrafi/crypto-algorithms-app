@@ -3,27 +3,51 @@ from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 from Crypto.Protocol.KDF import PBKDF2
 import base64
+from hashlib import sha256
 
 # AES
-def aes_encrypt(text, password):
-    salt = get_random_bytes(16)
-    key = PBKDF2(password, salt, dkLen=32)
-    cipher = AES.new(key, AES.MODE_CBC)
-    iv = cipher.iv
-    padded_text = text + ' ' * (16 - len(text) % 16)
-    encrypted = cipher.encrypt(padded_text.encode())
-    result = base64.b64encode(salt + iv + encrypted).decode()
-    return result
+def aes_encrypt(text, password=None):
+    if password:
+        key = sha256(password.encode()).digest()
+        generated_key = None
+    else:
+        key = get_random_bytes(32)  # AES-256
+        generated_key = base64.b64encode(key).decode()
+
+    cipher = AES.new(key, AES.MODE_EAX)
+    ciphertext, tag = cipher.encrypt_and_digest(text.encode())
+
+    result = base64.b64encode(cipher.nonce + tag + ciphertext).decode()
+
+    response = {"result": result}
+    if generated_key:  # si une clé auto a été générée
+        response["generated_key"] = generated_key
+    return response
+
 
 def aes_decrypt(enc_text, password):
-    raw = base64.b64decode(enc_text)
-    salt = raw[:16]
-    iv = raw[16:32]
-    enc = raw[32:]
-    key = PBKDF2(password, salt, dkLen=32)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted = cipher.decrypt(enc).decode().rstrip()
-    return decrypted
+    try:
+        raw = base64.b64decode(enc_text)
+        nonce, tag, ciphertext = raw[:16], raw[16:32], raw[32:]
+
+        # Vérifier si la clé est en Base64 (clé générée automatiquement)
+        try:
+            decoded_key = base64.b64decode(password)
+            if len(decoded_key) in (16, 24, 32):  # clé AES valide
+                key = decoded_key
+            else:
+                # sinon on considère que c'est un mot de passe classique
+                key = sha256(password.encode()).digest()
+        except Exception:
+            # si décodage échoue → mot de passe classique
+            key = sha256(password.encode()).digest()
+
+        cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
+        decrypted = cipher.decrypt_and_verify(ciphertext, tag)
+        return decrypted.decode()
+
+    except Exception as e:
+        raise Exception("AES decryption failed: " + str(e))
 
 # RSA
 def generate_rsa_keys():
