@@ -236,6 +236,8 @@ async function analyzeText(mode) {
 
     // Met à jour automatiquement le champ clé selon l'algo recommandé
     updateKeyField(methodeRecommandee, "encrypt");
+     const targetSection = document.getElementById('encryptionDetails');
+  targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   } catch (err) {
     alert("Error during analysis: " + err.message);
