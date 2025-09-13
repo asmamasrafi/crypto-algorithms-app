@@ -82,27 +82,35 @@ Open the frontend `index.html` with **Live Server** (VS Code extension) or serve
 
 ## 📂 Project Structure
 
-
-📂 Project Structure
---------------------
-
 crypto-algorithms-app/
-│── index.html              # Main frontend page (entry point of the app)
-│── readme.md               # Documentation file
-│── requirements.txt        # Python dependencies for backend
-│
-├── assets/                 # Frontend assets
-│   ├── css/                # Stylesheets (main design & layout)
+
+│── index.html        # Main frontend page (entry point of the app)
+
+│── readme.md         # Documentation file
+
+│── requirements.txt  # Python dependencies for backend
+
+│── assets/           # Frontend assets
+
+│   ├── css/          # Stylesheets (main design & layout)
+
 │   │   └── main.css
-│   ├── img/                # Images & icons used in the UI
-│   └── js/                 # Frontend logic
+
+│   ├── img/          # Images & icons used in the UI
+
+│   └── js/           # Frontend logic
+
 │       └── main.js
-│
-├── backend/                # Backend logic (Flask-based API)
-│   ├── app.py              # Flask backend API (entry point for server)
-│   ├── analyse_utils.py    # Sensitive data detection & scoring functions
-│   ├── crypto_utils.py     # AES & RSA encryption/decryption functions
-│   └── rsa_key_utils.py    # RSA key generation & handling
+
+│── backend/          # Backend logic (Flask-based API)
+
+│   ├── app.py        # Flask backend API (entry point for server)
+
+│   ├── analyse_utils.py  # Sensitive data detection & scoring functions
+
+│   ├── crypto_utils.py   # AES & RSA encryption/decryption functions
+
+│   └── rsa_key_utils.py  # RSA key generation & handling
 
 ---
 
